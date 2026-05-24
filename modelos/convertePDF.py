@@ -17,29 +17,28 @@ def filtrar_e_converter_para_pdf(pasta_analises, termo_filtro):
 
     for docx_path in arquivos_docx:
         pdf_path = docx_path.with_suffix('.pdf')
-        print(f"Convertendo: {docx_path.name} -> {pdf_path.name}")
-    
+        print(f"Processando: {docx_path.name} -> {pdf_path.name}")
+        
         try:
-            # Executa a conversão baseada no Sistema Operacional Linux
-                subprocess.run([
-                    'libreoffice', 
-                    '--headless', 
-                    '--convert-to', 'pdf', 
-                    '--outdir', str(caminho_pasta), 
-                    str(docx_path)
-                ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                # exclui o arquivo .docx somente se o PDF foi gerado com sucesso
-                if pdf_path.exists() and pdf_path.stat().st_size > 0:
-                    docx_path.unlink()
-                    print(f"  ↳ [SUCESSO] {docx_path.name} excluído do diretório.")
-                else:
-                    print(f"  ↳ [ALERTA] Falha ao gerar o PDF. O arquivo original .docx foi mantido.")
-
+            # 2. Executa a conversão baseada no Sistema Operacional            
+            subprocess.run([
+                'libreoffice', '--headless', '--convert-to', 'pdf', 
+                '--outdir', str(caminho_pasta), str(docx_path)
+            ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        
+            # 3. VALIDAÇÃO DE SEGURANÇA: O PDF foi realmente criado?
+            if pdf_path.exists() and pdf_path.stat().st_size > 0:
+                docx_path.unlink()
+                print(f"  ↳ [SUCESSO] {docx_path.name} excluído do diretório.")
+            else:
+                print(f"  ↳ [ALERTA] Falha ao gerar o PDF. O arquivo original .docx foi mantido.")
+                
         except Exception as e:
-                print(f"  ↳ [ERRO] Falha no processamento do arquivo {docx_path.name}: {e}")            
+            print(f"  ↳ [ERRO] Falha no processamento do arquivo {docx_path.name}: {e}")
+    
     print("Processo de conversão concluído!")
 
 filtrar_e_converter_para_pdf(
-        pasta_analises='analises',
-        termo_filtro='Positiva'
-    )
+    pasta_analises='analises',
+    termo_filtro='positiva'
+)

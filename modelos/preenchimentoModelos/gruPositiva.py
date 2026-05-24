@@ -1,5 +1,4 @@
 from modelos.preencherDados import preencher_modelo
-from modelos.convertePDF import filtrar_e_converter_para_pdf
 
 def criar_modelo_gru_positiva(dadosProcesso):
     # ler os dados do arquivo txt e armazenar em um dicionário
@@ -25,9 +24,4 @@ def criar_modelo_gru_positiva(dadosProcesso):
         pasta_destino='modelos/analises',
         nome_arquivo_saida=f'kauã - {dicionario["[processo]"]} - GRU Positiva.docx',
         dados=dicionario
-    )
-
-    filtrar_e_converter_para_pdf(
-        pasta_analises='modelos/analises',
-        termo_filtro='positiva'
     )
